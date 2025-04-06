@@ -1,0 +1,548 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nova - Modern Web Platform</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        gray: {
+                            900: '#111827',
+                            800: '#1F2937',
+                            700: '#374151',
+                            600: '#4B5563',
+                            500: '#6B7280',
+                            400: '#9CA3AF',
+                            300: '#D1D5DB',
+                            200: '#E5E7EB',
+                            100: '#F3F4F6',
+                            50: '#F9FAFB',
+                        },
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/ScrollTrigger.min.js"></script>
+    <!-- p5.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js"></script>
+    <style>
+        /* Custom styles */
+        body {
+            overflow-x: hidden;
+        }
+        .feature-card {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        .gradient-text {
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gray-900 text-gray-100 transition-colors duration-500">
+    <!-- Background particles -->
+    <div id="p5-container" class="fixed inset-0 -z-10 opacity-20"></div>
+    
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 backdrop-blur-md bg-opacity-80 border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <div id="logo-3d" class="w-10 h-10"></div>
+                <span class="text-2xl font-bold gradient-text bg-gradient-to-r from-purple-400 to-blue-500">
+                    Nova
+                </span>
+            </div>
+            
+            <div class="hidden md:flex space-x-8 items-center">
+                <a href="#features" class="hover:text-purple-400 transition">Features</a>
+                <a href="#solutions" class="hover:text-purple-400 transition">Solutions</a>
+                <a href="#pricing" class="hover:text-purple-400 transition">Pricing</a>
+                <a href="#contact" class="hover:text-purple-400 transition">Contact</a>
+                
+                <button id="theme-toggle" class="p-2 rounded-full bg-gray-800 hover:bg-gray-700 transition">
+                    ☀️
+                </button>
+                
+                <button class="px-6 py-2 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full font-medium hover:opacity-90 transition">
+                    Get Started
+                </button>
+            </div>
+            
+            <button id="mobile-menu-button" class="md:hidden p-2">
+                <div id="menu-line1" class="w-6 h-0.5 bg-current transition mb-1.5"></div>
+                <div id="menu-line2" class="w-6 h-0.5 bg-current transition mb-1.5"></div>
+                <div id="menu-line3" class="w-6 h-0.5 bg-current transition"></div>
+            </button>
+        </div>
+        
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-gray-800 bg-opacity-95 p-6 space-y-4">
+            <a href="#features" class="block py-2 hover:text-purple-400 transition">Features</a>
+            <a href="#solutions" class="block py-2 hover:text-purple-400 transition">Solutions</a>
+            <a href="#pricing" class="block py-2 hover:text-purple-400 transition">Pricing</a>
+            <a href="#contact" class="block py-2 hover:text-purple-400 transition">Contact</a>
+            <div class="pt-4 border-t border-gray-700">
+                <button class="w-full py-2 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full font-medium">
+                    Get Started
+                </button>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section id="hero" class="pt-32 pb-20 px-6">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center">
+            <div class="md:w-1/2 mb-12 md:mb-0">
+                <h1 class="text-5xl md:text-6xl font-bold leading-tight mb-6">
+                    Build <span class="gradient-text bg-gradient-to-r from-purple-400 to-blue-500">Digital Experiences</span> That Matter
+                </h1>
+                <p class="text-xl text-gray-400 mb-8 max-w-lg">
+                    Our platform empowers you to create stunning, high-performance digital products with cutting-edge technology.
+                </p>
+                <div class="flex space-x-4">
+                    <button class="px-8 py-3 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full font-medium hover:opacity-90 transition">
+                        Start Free Trial
+                    </button>
+                    <button class="px-8 py-3 border border-gray-700 rounded-full font-medium hover:bg-gray-800 transition">
+                        See Demo
+                    </button>
+                </div>
+            </div>
+            
+            <div class="md:w-1/2 relative">
+                <div id="hero-3d" class="relative h-96 w-full"></div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Features Section -->
+    <section id="features" class="py-20 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-4">Powerful Features</h2>
+                <p class="text-xl text-gray-400 max-w-2xl mx-auto">
+                    Designed to help you build better products faster with our comprehensive toolkit.
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="feature-card bg-gray-800 bg-opacity-50 rounded-xl p-8 border border-gray-700 hover:border-purple-500 transition-all hover:shadow-lg hover:shadow-purple-500/10">
+                    <div class="text-purple-400 text-3xl mb-4">🛠️</div>
+                    <h3 class="text-2xl font-bold mb-3">Advanced Toolkit</h3>
+                    <p class="text-gray-400">Everything you need to build modern web applications with our comprehensive component library.</p>
+                </div>
+                
+                <div class="feature-card bg-gray-800 bg-opacity-50 rounded-xl p-8 border border-gray-700 hover:border-purple-500 transition-all hover:shadow-lg hover:shadow-purple-500/10">
+                    <div class="text-purple-400 text-3xl mb-4">⚡</div>
+                    <h3 class="text-2xl font-bold mb-3">Blazing Fast</h3>
+                    <p class="text-gray-400">Optimized for performance with lazy loading, code splitting, and efficient rendering.</p>
+                </div>
+                
+                <div class="feature-card bg-gray-800 bg-opacity-50 rounded-xl p-8 border border-gray-700 hover:border-purple-500 transition-all hover:shadow-lg hover:shadow-purple-500/10">
+                    <div class="text-purple-400 text-3xl mb-4">🔗</div>
+                    <h3 class="text-2xl font-bold mb-3">Real-time Sync</h3>
+                    <p class="text-gray-400">Collaborate with your team in real-time with our synchronization technology.</p>
+                </div>
+                
+                <div class="feature-card bg-gray-800 bg-opacity-50 rounded-xl p-8 border border-gray-700 hover:border-purple-500 transition-all hover:shadow-lg hover:shadow-purple-500/10">
+                    <div class="text-purple-400 text-3xl mb-4">🎨</div>
+                    <h3 class="text-2xl font-bold mb-3">Design System</h3>
+                    <p class="text-gray-400">Consistent, accessible components that follow modern design principles.</p>
+                </div>
+                
+                <div class="feature-card bg-gray-800 bg-opacity-50 rounded-xl p-8 border border-gray-700 hover:border-purple-500 transition-all hover:shadow-lg hover:shadow-purple-500/10">
+                    <div class="text-purple-400 text-3xl mb-4">📊</div>
+                    <h3 class="text-2xl font-bold mb-3">Analytics</h3>
+                    <p class="text-gray-400">Built-in analytics to track user behavior and improve your product.</p>
+                </div>
+                
+                <div class="feature-card bg-gray-800 bg-opacity-50 rounded-xl p-8 border border-gray-700 hover:border-purple-500 transition-all hover:shadow-lg hover:shadow-purple-500/10">
+                    <div class="text-purple-400 text-3xl mb-4">🔒</div>
+                    <h3 class="text-2xl font-bold mb-3">Enterprise Security</h3>
+                    <p class="text-gray-400">End-to-end encryption and compliance with industry security standards.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Interactive Demo Section -->
+    <section class="py-20 px-6 bg-gradient-to-br from-gray-800 to-gray-900">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-4">Interactive Experience</h2>
+                <p class="text-xl text-gray-400 max-w-2xl mx-auto">
+                    Play with our interactive demo to see the power of our platform.
+                </p>
+            </div>
+            
+            <div id="interactive-demo" class="bg-gray-900 rounded-xl overflow-hidden border border-gray-700">
+                <div class="flex border-b border-gray-700">
+                    <button data-tab="design" class="tab-button px-6 py-3 font-medium text-purple-400 border-b-2 border-purple-400">
+                        Design
+                    </button>
+                    <button data-tab="develop" class="tab-button px-6 py-3 font-medium text-gray-400 hover:text-gray-200">
+                        Develop
+                    </button>
+                    <button data-tab="publish" class="tab-button px-6 py-3 font-medium text-gray-400 hover:text-gray-200">
+                        Publish
+                    </button>
+                </div>
+                
+                <div class="p-6 min-h-96 flex items-center justify-center">
+                    <div id="design-demo" class="tab-content text-center">
+                        <h3 class="text-2xl font-bold mb-4">Visual Design Tools</h3>
+                        <p class="text-gray-400 mb-6">Drag-and-drop interface with real-time collaboration.</p>
+                        <div class="relative h-48 w-full bg-gray-800 rounded-lg overflow-hidden">
+                            <div id="design-canvas" class="w-full h-full"></div>
+                        </div>
+                    </div>
+                    
+                    <div id="develop-demo" class="tab-content hidden text-center">
+                        <h3 class="text-2xl font-bold mb-4">Code Editor</h3>
+                        <p class="text-gray-400 mb-6">Real-time preview with intelligent code completion.</p>
+                        <div class="relative h-48 w-full bg-gray-800 rounded-lg overflow-hidden text-left">
+                            <div class="absolute inset-0 p-4 font-mono text-sm">
+                                <div class="text-purple-400">function</div>
+                                <div class="text-blue-400">Component</div>
+                                <div class="text-gray-400">() {</div>
+                                <div class="ml-4 text-yellow-400">return</div>
+                                <div class="ml-8 text-green-400">&lt;div&gt;</div>
+                                <div class="ml-12 text-white">Hello World</div>
+                                <div class="ml-8 text-green-400">&lt;/div&gt;</div>
+                                <div class="text-gray-400">}</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="publish-demo" class="tab-content hidden text-center">
+                        <h3 class="text-2xl font-bold mb-4">One-Click Publishing</h3>
+                        <p class="text-gray-400 mb-6">Deploy to global CDN with automatic scaling.</p>
+                        <div class="relative h-48 w-full bg-gray-800 rounded-lg overflow-hidden flex items-center justify-center">
+                            <div class="animate-pulse">
+                                <div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                </div>
+                                <div class="text-xl font-medium">Deployment Successful!</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- More sections would go here... -->
+    
+    <script>
+        // Dark mode toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const html = document.documentElement;
+        
+        themeToggle.addEventListener('click', () => {
+            html.classList.toggle('dark');
+            const isDark = html.classList.contains('dark');
+            themeToggle.textContent = isDark ? '☀️' : '🌙';
+            localStorage.setItem('darkMode', isDark);
+        });
+        
+        // Check for saved preference or system preference
+        if (localStorage.getItem('darkMode') === 'true' || 
+            (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            html.classList.add('dark');
+            themeToggle.textContent = '☀️';
+        } else {
+            html.classList.remove('dark');
+            themeToggle.textContent = '🌙';
+        }
+        
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuLine1 = document.getElementById('menu-line1');
+        const menuLine2 = document.getElementById('menu-line2');
+        const menuLine3 = document.getElementById('menu-line3');
+        
+        mobileMenuButton.addEventListener('click', () => {
+            const isOpen = mobileMenu.classList.toggle('hidden');
+            
+            if (isOpen) {
+                menuLine1.classList.remove('transform', 'rotate-45', 'translate-y-1.5');
+                menuLine2.classList.remove('opacity-0');
+                menuLine3.classList.remove('transform', '-rotate-45', '-translate-y-1.5');
+                menuLine2.classList.add('mb-1.5');
+                menuLine3.classList.add('mb-1.5');
+            } else {
+                menuLine1.classList.add('transform', 'rotate-45', 'translate-y-1.5');
+                menuLine2.classList.add('opacity-0');
+                menuLine3.classList.add('transform', '-rotate-45', '-translate-y-1.5');
+                menuLine2.classList.remove('mb-1.5');
+                menuLine3.classList.remove('mb-1.5');
+            }
+        });
+        
+        // Tab functionality
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
+        
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const tabId = button.getAttribute('data-tab');
+                
+                // Update active tab button
+                tabButtons.forEach(btn => {
+                    btn.classList.remove('text-purple-400', 'border-b-2', 'border-purple-400');
+                    btn.classList.add('text-gray-400', 'hover:text-gray-200');
+                });
+                button.classList.add('text-purple-400', 'border-b-2', 'border-purple-400');
+                button.classList.remove('text-gray-400', 'hover:text-gray-200');
+                
+                // Show selected tab content
+                tabContents.forEach(content => {
+                    content.classList.add('hidden');
+                });
+                document.getElementById(${tabId}-demo).classList.remove('hidden');
+            });
+        });
+        
+        // Initialize animations
+        gsap.registerPlugin(ScrollTrigger);
+        
+        // Hero animation
+        gsap.from("#hero", {
+            opacity: 0,
+            y: 50,
+            duration: 1.5,
+            ease: "power3.out",
+        });
+        
+        // Feature cards animation
+        gsap.to(".feature-card", {
+            scrollTrigger: {
+                trigger: "#features",
+                start: "top 80%",
+                toggleActions: "play none none none",
+            },
+            opacity: 1,
+            y: 0,
+            stagger: 0.2,
+            duration: 0.8,
+            ease: "back.out(1.7)",
+        });
+        
+        // p5.js particle background
+        const p5Background = new p5((sketch) => {
+            sketch.setup = () => {
+                const container = document.getElementById('p5-container');
+                const canvas = sketch.createCanvas(
+                    container.offsetWidth,
+                    container.offsetHeight
+                );
+                canvas.parent('p5-container');
+            };
+            
+            sketch.draw = () => {
+                sketch.background(0, 5);
+                sketch.noFill();
+                sketch.stroke(255, 100);
+                
+                // Create dynamic particles
+                for (let i = 0; i < 50; i++) {
+                    const x = sketch.random(sketch.width);
+                    const y = sketch.random(sketch.height);
+                    const size = sketch.random(2, 8);
+                    sketch.ellipse(x, y, size, size);
+                    
+                    // Connect particles
+                    for (let j = 0; j < i; j++) {
+                        const otherX = sketch.random(sketch.width);
+                        const otherY = sketch.random(sketch.height);
+                        const distance = sketch.dist(x, y, otherX, otherY);
+                        if (distance < 150) {
+                            sketch.stroke(255, 50);
+                            sketch.line(x, y, otherX, otherY);
+                        }
+                    }
+                }
+            };
+            
+            sketch.windowResized = () => {
+                const container = document.getElementById('p5-container');
+                sketch.resizeCanvas(
+                    container.offsetWidth,
+                    container.offsetHeight
+                );
+            };
+        });
+        
+        // 3D Logo
+        const initLogo = () => {
+            const container = document.getElementById('logo-3d');
+            const width = container.offsetWidth;
+            const height = container.offsetHeight;
+            
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ alpha: true });
+            renderer.setSize(width, height);
+            container.appendChild(renderer.domElement);
+            
+            const geometry = new THREE.BoxGeometry(1, 1, 1);
+            const material = new THREE.MeshStandardMaterial({ color: 0x8B5CF6 });
+            const cube = new THREE.Mesh(geometry, material);
+            scene.add(cube);
+            
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            scene.add(ambientLight);
+            
+            const pointLight = new THREE.PointLight(0xffffff, 1);
+            pointLight.position.set(5, 5, 5);
+            scene.add(pointLight);
+            
+            camera.position.z = 2;
+            
+            const animate = () => {
+                requestAnimationFrame(animate);
+                cube.rotation.x += 0.01;
+                cube.rotation.y += 0.01;
+                renderer.render(scene, camera);
+            };
+            
+            animate();
+            
+            const handleResize = () => {
+                const width = container.offsetWidth;
+                const height = container.offsetHeight;
+                camera.aspect = width / height;
+                camera.updateProjectionMatrix();
+                renderer.setSize(width, height);
+            };
+            
+            window.addEventListener('resize', handleResize);
+        };
+        
+        // 3D Hero Model
+        const initHeroModel = () => {
+            const container = document.getElementById('hero-3d');
+            const width = container.offsetWidth;
+            const height = container.offsetHeight;
+            
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(width, height);
+            container.appendChild(renderer.domElement);
+            
+            const geometry = new THREE.TorusKnotGeometry(1, 0.4, 100, 16);
+            const material = new THREE.MeshStandardMaterial({
+                color: 0x8B5CF6,
+                emissive: 0x8B5CF6,
+                emissiveIntensity: 0.5,
+                metalness: 0.8,
+                roughness: 0.2
+            });
+            const torusKnot = new THREE.Mesh(geometry, material);
+            scene.add(torusKnot);
+            
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            scene.add(ambientLight);
+            
+            const pointLight = new THREE.PointLight(0xffffff, 1);
+            pointLight.position.set(10, 10, 10);
+            scene.add(pointLight);
+            
+            camera.position.z = 5;
+            
+            const clock = new THREE.Clock();
+            
+            const animate = () => {
+                requestAnimationFrame(animate);
+                const elapsedTime = clock.getElapsedTime();
+                torusKnot.rotation.y = elapsedTime * 0.2;
+                renderer.render(scene, camera);
+            };
+            
+            animate();
+            
+            const handleResize = () => {
+                const width = container.offsetWidth;
+                const height = container.offsetHeight;
+                camera.aspect = width / height;
+                camera.updateProjectionMatrix();
+                renderer.setSize(width, height);
+            };
+            
+            window.addEventListener('resize', handleResize);
+        };
+        
+        // 3D Design Canvas for Demo
+        const initDesignCanvas = () => {
+            const container = document.getElementById('design-canvas');
+            const width = container.offsetWidth;
+            const height = container.offsetHeight;
+            
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(width, height);
+            container.appendChild(renderer.domElement);
+            
+            // Plane
+            const planeGeometry = new THREE.PlaneGeometry(5, 5);
+            const planeMaterial = new THREE.MeshStandardMaterial({ color: 0x4B5563 });
+            const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+            scene.add(plane);
+            
+            // Box
+            const boxGeometry = new THREE.BoxGeometry(1, 1, 0.2);
+            const boxMaterial = new THREE.MeshStandardMaterial({ color: 0x8B5CF6 });
+            const box = new THREE.Mesh(boxGeometry, boxMaterial);
+            box.position.set(0, 0, 0.1);
+            scene.add(box);
+            
+            // Sphere
+            const sphereGeometry = new THREE.SphereGeometry(0.5, 32, 32);
+            const sphereMaterial = new THREE.MeshStandardMaterial({ color: 0x3B82F6 });
+            const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+            sphere.position.set(-1.5, 1, 0.1);
+            scene.add(sphere);
+            
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            scene.add(ambientLight);
+            
+            const pointLight = new THREE.PointLight(0xffffff, 1);
+            pointLight.position.set(5, 5, 5);
+            scene.add(pointLight);
+            
+            camera.position.z = 3;
+            
+            const animate = () => {
+                requestAnimationFrame(animate);
+                renderer.render(scene, camera);
+            };
+            
+            animate();
+        };
+        
+        // Initialize all 3D elements when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            initLogo();
+            initHeroModel();
+            initDesignCanvas();
+        });
+    </script>
+</body>
+</html>
